@@ -1,0 +1,46 @@
+import mlflow
+from mlflow.tracking import MlflowClient
+
+if 'custom' not in globals():
+    from mage_ai.data_preparation.decorators import custom
+if 'test' not in globals():
+    from mage_ai.data_preparation.decorators import test
+
+
+@custom
+def transform_custom(*args, **kwargs):
+    """
+    args: The output from any upstream parent blocks (if applicable)
+
+    Returns:
+        Anything (e.g. data frame, dictionary, array, int, str, etc.)
+    """
+    # Specify your custom logic here
+
+    client = MlflowClient(tracking_uri="http://mlflow:5000")
+
+    EXPERIMENT_NAME = "citi-bike"
+    experiment = client.get_experiment_by_name(EXPERIMENT_NAME)
+    
+    best_run = client.search_runs(
+    experiment_ids=experiment.experiment_id,
+    run_view_type = ViewType.ACTIVE_ONLY,
+    max_results=1,
+    order_by=["metrics.root_mean_squared_error_X_val"]
+    )[0]
+
+    run_id = best_run.info.run_id
+    model_uri = f"runs:/{run_id}/model"
+    mlflow.register_model(model_uri=model_uri,name="citi-bike-model")
+
+    models = client.get_latest_versions(name="citi-bike-model")
+
+    return {}
+
+
+@test
+def test_output(output, *args) -> None:
+    """
+    Template code for testing the output of the block.
+    """
+    assert output is not None, 'The output is undefined'

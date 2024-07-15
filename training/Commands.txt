@@ -1,0 +1,5 @@
+# To start Mage
+Run docker desktop
+Modify any parameters inside the .env file( PROJECT_NAME and MAGE_CODE_PATH)
+rum cmd "docker compose up"
+open http://localhost:6789
