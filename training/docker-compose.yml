@@ -4,6 +4,7 @@ services:
       - .env
     build:
       context: .
+      dockerfile: mage.dockerfile
     command: /app/run_app.sh mage start ${PROJECT_NAME}
     ports:
       - 6789:6789
@@ -49,6 +50,17 @@ services:
       - "./training_mage/mlflow:/home/mlflow/:rw"
     networks:
       - app-network
+  flask:
+    build:
+      context: .
+      dockerfile: flask.dockerfile
+    depends_on:
+      - mlflow
+    ports:
+      - "9696:9696"
+    networks:
+      - app-network
+  
 
 networks:
   app-network:

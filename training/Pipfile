@@ -7,10 +7,11 @@ name = "pypi"
 pandas = "*"
 requests = "*"
 scikit-learn = "*"
-flask = "*"
 mlflow = "*"
-waitress = "*"
+flask = "*"
 gunicorn = "*"
+waitress = "*"
+
 
 [dev-packages]
 ipykernel = "*"
